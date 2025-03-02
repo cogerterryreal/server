@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify
 app = Flask(__name__)
 
 # Store valid licenses (Should be stored in a database in production)
-VALID_LICENSES = {https://github.com/cogerterryreal/server/settings
+VALID_LICENSES =
     "USER-1234-5678-ABCD": None,
     "USER-9876-5432-WXYZ": None
 }
