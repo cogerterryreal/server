@@ -2,7 +2,6 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-# Store valid licenses (Should be stored in a database in production)
 VALID_LICENSES = {
     "USER-1234-5678-ABCD": None,
     "USER-9876-5432-WXYZ": None
@@ -10,13 +9,19 @@ VALID_LICENSES = {
 
 @app.route("/")
 def home():
-    return "License Server is Running! Use /activate to activate a license."
+    return jsonify({"status": "success", "message": "License Server is Running!"})
 
-@app.route("/activate", methods=["POST"])
+@app.route("/activate", methods=["POST"])  # Ensure POST method is allowed
 def activate_license():
-    data = request.json
+    if not request.is_json:
+        return jsonify({"status": "error", "message": "Request must be in JSON format"}), 400
+
+    data = request.get_json()
     license_key = data.get("license_key")
     mac_address = data.get("mac_address")
+
+    if not license_key or not mac_address:
+        return jsonify({"status": "error", "message": "Missing required parameters."}), 400
 
     if license_key not in VALID_LICENSES:
         return jsonify({"status": "error", "message": "Invalid License Key"}), 400
