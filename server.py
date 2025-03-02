@@ -2,16 +2,17 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
+# Store valid licenses
 VALID_LICENSES = {
     "USER-1234-5678-ABCD": None,
     "USER-9876-5432-WXYZ": None
 }
 
-@app.route("/")
+@app.route("/", methods=["GET"])
 def home():
-    return jsonify({"status": "success", "message": "License Server is Running!"})
+    return jsonify({"status": "success", "message": "License Server is Running! Use /activate to activate a license."})
 
-@app.route("/activate", methods=["POST"])  # Ensure POST method is allowed
+@app.route("/activate", methods=["POST"])  # ✅ Allow only POST requests
 def activate_license():
     if not request.is_json:
         return jsonify({"status": "error", "message": "Request must be in JSON format"}), 400
